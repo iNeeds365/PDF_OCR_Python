@@ -6,7 +6,7 @@ from entity import Person
 from entity import fix
 import jsonpickle
 
-areas =[x.lower() for x in ['Administrative law', 'Advertising law', 'Admiralty law', 'Agency law', 'Alcohol law', 'Alternative dispute resolution', 'Animal law', 'Antitrust law', 'Competition law', 'Appellate practice', 'Art law', 'culture law', 'Aviation law', 'Banking law', 'Bankruptcy law', 'creditor debtor rights law', 'insolvency and reorganization law', 'Bioethics', 'Business law', 'commercial law', 'commercial litigation', 'Business organizations law', 'companies law', 'Civil law', 'common law', 'Class action litigation/Mass tort litigation', 'Common Interest Development law', 'Communications law', 'Computer law', 'Competition law', 'Conflict of law', 'private international law', 'Constitutional law', 'Construction law', 'Consumer law', 'Contract law', 'Copyright law', 'Corporate law', 'company law', 'corporate compliance law', 'corporate governance law', 'Criminal law', 'Cryptography law', 'Cultural property law', 'Custom law', 'Cyber law', 'Defamation', 'Derivatives law', 'futures law', 'Drug control law', 'Ecclesiastical law', 'Canon law', 'Elder law', 'Employee benefits law', 'Employment law', 'Energy law', 'Entertainment law', 'Environmental law', 'Equipment finance law', 'Family law', 'FDA law', 'Financial services regulation law', 'Firearm law', 'Food law', 'Franchise law', 'Gaming law', 'Health and safety law', 'Health law', 'HOA law', 'Immigration law', 'Insurance law', 'Intellectual property law', 'International law', 'International human rights law', 'International trade and finance law', 'Internet law', 'Juvenile law', 'Labour law', 'Labor law', 'Land use law', 'zoning law', 'Litigation', 'Martial law', 'Media law', 'Medical law', 'Mergers law', 'acquisitions law', 'Military law', 'Mining law', 'Music law', 'Mutual funds law', 'Nationality law', 'Native American law', 'Obscenity law', 'Oil law', 'gas law', 'Parliamentary law', 'Patent law', 'Poverty law', 'Privacy law', 'Private equity law', 'Private funds law', 'Hedge funds law', 'Procedural law', 'Product liability litigation', 'Property law', 'Public health law', 'Public International Law', 'Railway law', 'Real estate law', 'Securities law', 'Capital markets law', 'Social Security disability law', 'Space law', 'Sports law', 'Statutory law', 'Tax law', 'Technology law', 'Timber law', 'Tort law', 'Trademark law', 'Transport law', 'Transportation law', 'Trusts law', 'estates law', 'Utilities Regulation', 'Venture capital law', 'Water law', 'Conveyancers']]
+areas = [x.lower() for x in ["Administration of Bodies Corporate", "Administrative Law", "Administrators of estates", "Adminstrators of deceased estates", "Adoptions", "Agency Work", "Agreements", "Alternate Dispute Resolution", "Antenuptial Contracts", "Anti-Trust: Competition", "Banking Law", "Body Corporate Management", "Broadcasting Law", "Building Law", "Business Agreements", "Business Law", "Business Rescue", "Business Transactions", "Civil Litigation", "Civil Mediation", "Commercial Advice", "Commercial Contracts", "Commercial Drafting", "Commerical Law", "Commissioner of Oaths", "Company Law", "Company Registrations", "Company Secretarial", "Competition Law", "Compliance Law", "Constitutional Law", "Construction Law", "Consumer Law", "Consumer Protection Law", "Contracts", "Contractual Law", "Conveyancers", "Conveyancing", "Corporate Commercial", "Corporate Governance", "Corporate Law", "Correspondent Work", "Credit Advice", "Credit Law", "Criminal Litigation", "Cross Border Negotiations", "Debt Collections", "Debt Recovery", "Debt Review", "Deseased Estates", "Deseased Estates Planning", "Development Law", "Disciplinary Enquiries", "Dispute Resolution", "Divorce Mediations", "Divorces", "Divorces", "Domestic Violence", "Drafting of Contracts", "Employment Law", "Energy Law", "Entertainment Law", "Estate Planning", "Estates", "Evictions", "Exchange Control", "Family Disputes", "Family Law", "Family-Child Mediation", "Financial Planning", "Franchising", "Freight Law", "General", "High & Magistrates' Court Civil Litigation", "High & Magistrates' Court Litigation", "High Court Litigation", "High, Magistrate's & Regional Court Litigation", "Housing Law", "Human Rights", "Immigration Law", "Insolvency", "Insurance Claims", "Insurance Law", "Intellectual Property Law", "International Trade", "Investigations", "Islamic Law", "Labour Dispute Resolutions", "Labour Law", "Labour Law", "Labour Law Specialists", "Land Claims", "Land Reformations", "Landlord Tenant Law", "Leases", "Legal Advisers", "Legal Consultants", "Levy Collections", "Liquidations", "Liquor Licensing", "Litigation", "Local Government Law", "Magistrates' Court Litigation", "Maintenance", "Maritime Law", "Matrimonial Law", "Media Law", "Mediation", "Mediators", "Medical Aid Law", "Medical Law", "Medical Negligence", "Mining Law", "Motor Insurance Law", "Municipal Law", "MVA", "Non-Profit Development", "Notaries", "Notary Public", "Pension Fund Law", "Personal Injury Claims", "Police Brutality", "Pro Bono", "Procurement", "Project Finance", "Property Law", "Property Transactions", "Public Law", "Real Estate", "Regional Court", "Rehabilitation", "Rent Tribunals", "Rental Collections", "Rental Law", "Rescission of Judgements", "Road Accident Fund Claims", "Sectional Title Law", "Sequestrations", "Small Business Law", "Sponsorship Law", "Sports Law", "Surrogacy Law", "Sworn Translator - German, English, Afrikaans-Legal", "Tax Litigation", "Technology Law", "Testamentary", "Testaments", "Third Party Claims", "Town Planning", "Trademarks", "Transfers", "Trusts", "Unlawful Arrests", "Valuers", "Water Law", "Wills", "Zoning of Properties"]]
 
 def strip_(s):
     s = re.sub(r"^[^a-zA-Z0-9\(]*", '', s)
@@ -81,18 +81,24 @@ def find_matching_paranthesis(x):
 
 def parse_company(comp_data):
     try:
-        # if comp_data.startswith('Bowman Gilfillan'):
-        #     comp_data = comp_data
+        comp_data = comp_data.replace('http: / /', 'http://').replace('http / /', 'http://').replace('http: ', 'http:').replace(':/ /', '://').replace(' GPS: ', '. GPS: ').replace('https: / /', 'https://').replace('https / /', 'https://').replace('https: ', 'https:')
+        comp_data = comp_data.replace('eMail :', 'eMail:').replace('e Mail:', 'eMail:')
+
+        if comp_data.startswith('Nkosi'):
+            comp_data = comp_data
         comp = Company()
         comp.Total = comp_data
-        regex = r"^[^\(]*"
         
         # company name
+        regex = r"^[^\(]*\([^\)]*\)[ \t]*Inc"
         x = re.match(regex, comp_data)
+        if x is None:
+            regex = r"^[^\(]*"
+            x = re.match(regex, comp_data)
         comp.CompanyName = x[0].strip()
+        comp_data = comp_data[len(x[0]):]
         
         # persons or areas
-        comp_data = comp_data[len(x[0]):]
         contents = find_matching_paranthesis(comp_data)
         title = 'Principal'
         area_passed = False
@@ -110,7 +116,7 @@ def parse_company(comp_data):
                 regex = r"^[^:;@\)]*:"
                 x = re.match(regex, con)
                 has_title = False
-                if x is not None:
+                if x is not None and 'eMail:' not in x[0]:
                     title = x[0].strip()[:-1]
                     con = con[len(x[0]):]
                     has_title = True
@@ -151,9 +157,9 @@ def parse_company(comp_data):
                     comp.Persons.append(fix(p))
                 
         # company info
-        comp_data = comp_data.replace('http: ', 'http:').replace(':/ /', '://').replace(' GPS: ', '. GPS: ')
-        comp.Web = re.findall(r"(http:/[^ ]*)", comp_data)
-        comp_data = re.sub(r"(http:/[^ ]*)", "", comp_data)
+        url_re = 'http[s]?://(?:[a-zA-Z]|[0-9]|[$-_@.&+]|[!*\(\),]|(?:%[0-9a-fA-F][0-9a-fA-F]))+'
+        comp.Web = re.findall(url_re, comp_data)
+        comp_data = re.sub(url_re, "", comp_data)
 
         # find note first
         note = re.findall('\([^\)]*\)', comp_data)
@@ -174,7 +180,12 @@ def parse_company(comp_data):
             elif field.startswith('Vax'):
                 comp.Vax = field[4:]
             elif field.startswith('eMail:'):
-                comp.Email = field[6:]
+                email_txt = field[6:]
+                comp.Email = re.findall(r"[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+", email_txt)
+                email_txt = re.sub(r'[a-zA-Z\.]*@[a-zA-Z\.]*', '', email_txt)
+                email_txt = re.sub(r'[\n\t ]+', '', email_txt)
+                if len(email_txt) > 0:
+                    comp.Note.append(email_txt)
             elif field.startswith('GPS:'):
                 comp.GPS = field[4:]
             elif field.startswith('Docex'):
@@ -182,7 +193,7 @@ def parse_company(comp_data):
             else:
                 comp.Address += field
         
-        if len(comp.CompanyName) is 0 or len(comp.Address) is 0 or comp.Address.strip().startswith('('):
+        if len(comp.CompanyName) is 0 or (len(comp.Address) is 0 and comp.Note is None) or comp.Address.strip().startswith('('):
             return None
         return comp
     except Exception as e:
@@ -191,6 +202,11 @@ def parse_company(comp_data):
 
 def parse_raw_txt_to_companies(txt):
     comp_data_list = []
+
+    # Column break replacing
+    txt = re.sub(r'\n+[^\n]*Copyright[^\n]*\n+', '\n', txt)
+    # print(txt)
+
     matches = re.finditer(r'\n\n([^\)\(])*\(', txt)
     for mat in matches:
         st = mat.start()

@@ -14,7 +14,7 @@ class Company(object):
         self.Vax = ''
         self.Docex = ''
         self.Web = []
-        self.Email = ''
+        self.Email = []
         self.GPS = ''
         self.Areas = []
         self.Note = []
